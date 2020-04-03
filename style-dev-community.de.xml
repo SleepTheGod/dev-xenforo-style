@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<style title="dev-community.de" description="" user_selectable="1" base_version_id="2010770" export_version="2">
+<style title="dev-community.de" description="" user_selectable="1" base_version_id="2010872" export_version="2">
   <templates>
     <template title="PAGE_CONTAINER" type="public" addon_id="XF" version_id="2010770" version_string="2.1.7"><![CDATA[<!DOCTYPE html>
 <html id="XF" lang="{$xf.language.language_code}" dir="{$xf.language.text_direction}"
@@ -585,7 +585,7 @@
 		<xf:if contentcheck="true">
 			<div class="p-footer-copyright">
 			<xf:contentcheck>
-				<xf:copyright />
+				<a href="https://xenforo.com" class="u-concealed" dir="ltr" target="_blank" rel="noopener">Forum software by XenForo<sup>®</sup> <span class="copyright">© 2010-2020 XenForo Ltd.</span></a>
 				{{ phrase('extra_copyright') }}
 			</xf:contentcheck>
 			</div>
@@ -771,10 +771,15 @@
 		<xf:if is="$position"><meta itemprop="position" content="{$position}" /></xf:if>
 	</li>
 </xf:macro>]]></template>
-    <template title="extra.less" type="public" addon_id="XF" version_id="2010770" version_string="2.1.7"><![CDATA[/* Header/Nav Logo mobile view */
+    <template title="extra.less" type="public" addon_id="XF" version_id="2010872" version_string="2.1.8 Patch 2"><![CDATA[/* Header/Nav Logo mobile view */
 .p-nav-smallLogo {
 	max-width: 200px;
 }
+
+.p-nav-smallLogo img {
+	max-height: 35px;
+}
+
 
 @media (max-width: 600px) {
 	.p-nav-inner {
@@ -785,9 +790,14 @@
 		display: block;
 		width: 100%;
 		max-width: none;
-		padding: @xf-paddingLarge;
+		padding: @xf-paddingMedium @xf-paddingLarge;
 		order: -1;
 	}
+}
+
+/* link color in posts */
+.link, .message-body .username {
+	color: #006bb3;
 }
 
 /* Block container behind posts */
@@ -799,6 +809,20 @@
 .blockMessage {
 	padding: @xf-paddingMedium !important;
 	background-color: @xf-paletteNeutral1 !important;
+}
+
+/* node post info box */
+.node-extra {
+	width: 300px;
+}
+
+/* Prefix accent (technology) */
+.label.label--accent {
+	border-color: @xf-paletteAccent3;
+}
+
+a.label.label--accent:hover, a:hover .label.label--accent {
+	border-color: @xf-paletteAccent3;
 }
 
 /* Sidebar blocks */
@@ -869,6 +893,29 @@ a.u-concealed:hover, .u-concealed a:hover {
 	</div>
 <xf:else />
 	<div class="blockMessage">{{ phrase('no_items_have_been_created_yet') }}</div>
+</xf:if>]]></template>
+    <template title="help_page" type="public" addon_id="XF" version_id="2010870" version_string="2.1.8"><![CDATA[<xf:title>{$page.title}</xf:title>
+
+<xf:head option="robots"><meta name="robots" content="noindex" /></xf:head>
+
+<xf:macro template="metadata_macros" name="metadata"
+	arg-canonicalUrl="{{ link('canonical:help', $page) }}"
+	arg-description="{$page.description}" />
+
+<xf:breadcrumb href="{{ link('help') }}">{{ phrase('help') }}</xf:breadcrumb>
+
+<xf:wrap template="help_wrapper" />
+
+<xf:if is="$page.advanced_mode">
+	{$templateHtml|raw}
+<xf:else />
+	<div class="block">
+		<div class="block-container">
+			<div class="block-body block-row">
+				{$templateHtml|raw}
+			</div>
+		</div>
+	</div>
 </xf:if>]]></template>
     <template title="help_wrapper" type="public" addon_id="XF" version_id="2010770" version_string="2.1.7"><![CDATA[<xf:if is="$pages is not empty">
 	<xf:sidenav>
