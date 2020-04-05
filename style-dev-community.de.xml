@@ -817,11 +817,13 @@
 }
 
 /* Prefix accent (technology) */
-.label.label--accent {
+.label.label--accent,
+a.label.label--accent:hover, a:hover .label.label--accent {
 	border-color: @xf-paletteAccent3;
 }
 
-a.label.label--accent:hover, a:hover .label.label--accent {
+/* pagination - current page link */
+.pageNav-page.pageNav-page--current {
 	border-color: @xf-paletteAccent3;
 }
 
@@ -838,6 +840,12 @@ a.label.label--accent:hover, a:hover .label.label--accent {
 	.block-footer {
 		padding: @xf-paddingMedium;
 	}
+}
+
+/* Resources history table headings */
+.dataList-row.dataList-row--header .dataList-cell {
+	backdrop-filter: none;
+	-webkit-backdrop-filter: none;
 }
 
 /* Footer - Colognifornia link */
