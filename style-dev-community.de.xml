@@ -1,7 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<style title="dev-community.de" description="" user_selectable="1" base_version_id="2010872" export_version="2">
+<style title="dev-community.de" description="" user_selectable="1" base_version_id="2011072" export_version="2">
   <templates>
-    <template title="PAGE_CONTAINER" type="public" addon_id="XF" version_id="2010770" version_string="2.1.7"><![CDATA[<!DOCTYPE html>
+    <template title="CMTV_Math_MathJax" type="public" addon_id="CMTV/Math" version_id="2010170" version_string="2.1.1"><![CDATA[<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+  	// CMTV_Math_MathJax_CONFIG_START
+    
+	tex2jax: {
+		processClass: 	"mathjax-proceed",
+		ignoreClass:	"mathjax-skip"
+	},
+	asciimath2jax: {
+		processClass: 	"mathjax-proceed",
+		ignoreClass:	"mathjax-skip"
+	},
+	
+  	showMathMenu:  {$xf.options.CMTV_Math_mathjax_showMathMenu},
+  	messageStyle: "{$xf.options.CMTV_Math_mathjax_messageStyle}",
+	displayAlign: "{$xf.options.CMTV_Math_mathjax_displayAlign}",
+	
+	// CMTV_Math_MathJax_CONFIG_END
+  });
+</script>
+
+<script class="js-CMTV_Math_renderOptions" type="application/json">{$xf.options.CMTV_Math_renderPositions|json|raw}</script>
+<script class="js-CMTV_Math_customRenderSelectors" type="application/json">{$xf.options.CMTV_Math_renderSelectors|json|raw}</script>
+<script class="js-CMTV_Math_customSkipSelectors" type="application/json">{$xf.options.CMTV_Math_skipSelectors|json|raw}</script>
+
+<script class="js-CMTV_Math_predefinedSelectors" type="application/json">
+	{
+		"titles": [
+			".p-title-value",
+			".contentRow-title",
+			".p-body-sidebar .contentRow-main > a",
+			".resourceSidebarList .contentRow-main > a",
+			".node-extra-title",
+			".structItem-title"
+		],
+		
+		"content": [
+			".message-body",
+			".contentRow-snippet",
+			".tooltip-content",
+			".resourceBody-main",
+			".structItem-resourceTagLine",
+			".bbCodePreview-content",
+			".comment-body",
+			"[data-widget-definition='new_profile_posts'] .contentRow-faderContent"
+		],
+		
+		"pages": [
+			"[data-template='help_page'] .p-body-pageContent",
+			"[data-template='help_page'] .p-body-sideNavContent",
+			"[data-template='help_index'] .p-body-pageContent",
+			"[data-template='help_index'] .p-body-sideNavContent"
+		],
+		
+		"signatures": [
+			".message-signature",
+			"[data-template=member_view] .block-row:contains({{ phrase('signature') }})"
+		],
+		
+		"about": [
+			"[data-template=member_view] .block-row:first-of-type"
+		],
+		
+		"skipDefault": [
+			".bbCodeBlock",
+			".bbCodeInline",
+			".fr-box"
+		]
+	}
+</script>
+
+<xf:js src="CMTV/Math/selector-resolver.js" min="1" addon="CMTV/Math" />
+<script>CMTV_Math.SResolver.resolve();</script>
+
+<xf:set var="$config" value="" />
+
+<xf:if is="$xf.options.CMTV_Math_mathjax_configuration">
+	<xf:set var="$config" value="?config={$xf.options.CMTV_Math_mathjax_configuration}" />
+</xf:if>
+
+<xf:set var="$locale">{{ $xf.language.language_code|substr(0, 2) }}</xf:set>
+
+<script src="/js/CMTV/Math/MathJax-2.7.8/latest.js{$config}&locale={$locale}" async></script>]]></template>
+    <template title="PAGE_CONTAINER" type="public" addon_id="XF" version_id="2011072" version_string="2.1.10 Patch 2"><![CDATA[<!DOCTYPE html>
 <html id="XF" lang="{$xf.language.language_code}" dir="{$xf.language.text_direction}"
 	data-app="public"
 	data-template="{$template}"
@@ -735,7 +818,7 @@
 			<xf:set var="$position" value="{{ 0 }}" />
 
 			<xf:set var="$rootBreadcrumb" value="{$navTree.{$xf.options.rootBreadcrumb}}" />
-			<xf:if is="$rootBreadcrumb AND $rootBreadcrumb.href != $xf.uri">
+			<xf:if is="$rootBreadcrumb AND $rootBreadcrumb.href != $xf.uri AND $rootBreadcrumb.href != $xf.fullUri">
 				<xf:set var="$position" value="{{ $position + 1 }}" />
 				<xf:macro name="crumb"
 					arg-position="{$position}"
@@ -743,14 +826,14 @@
 					arg-value="{$rootBreadcrumb.title}" />
 			</xf:if>
 
-			<xf:if is="$selectedNavEntry && $selectedNavEntry.href && $selectedNavEntry.href != $xf.uri && $selectedNavEntry.href != $rootBreadcrumb.href">
+			<xf:if is="$selectedNavEntry AND $selectedNavEntry.href AND $selectedNavEntry.href != $xf.uri AND $selectedNavEntry.href != $xf.fullUri AND $selectedNavEntry.href != $rootBreadcrumb.href">
 				<xf:set var="$position" value="{{ $position + 1 }}" />
 				<xf:macro name="crumb"
 					arg-position="{$position}"
 					arg-href="{$selectedNavEntry.href}"
 					arg-value="{$selectedNavEntry.title}" />
 			</xf:if>
-			<xf:foreach loop="$breadcrumbs" value="$breadcrumb" if="$breadcrumb.href != $xf.uri">
+			<xf:foreach loop="$breadcrumbs" value="$breadcrumb" if="$breadcrumb.href != $xf.uri AND $breadcrumb.href != $xf.fullUri">
 				<xf:set var="$position" value="{{ $position + 1 }}" />
 				<xf:macro name="crumb"
 					arg-position="{$position}"
@@ -771,7 +854,7 @@
 		<xf:if is="$position"><meta itemprop="position" content="{$position}" /></xf:if>
 	</li>
 </xf:macro>]]></template>
-    <template title="extra.less" type="public" addon_id="XF" version_id="2010872" version_string="2.1.8 Patch 2"><![CDATA[/* Header/Nav Logo mobile view */
+    <template title="extra.less" type="public" addon_id="XF" version_id="2010970" version_string="2.1.9"><![CDATA[/* Header/Nav Logo mobile view */
 .p-nav-smallLogo {
 	max-width: 200px;
 }
@@ -798,6 +881,11 @@
 /* link color in posts */
 .link, .message-body .username {
 	color: #006bb3;
+}
+
+/* code block */
+.bbCodeBlock {
+	margin-bottom: calc(@xf-lineHeightDefault + 0.75em);
 }
 
 /* Block container behind posts */
@@ -948,6 +1036,12 @@ a.u-concealed:hover, .u-concealed a:hover {
 <xf:widgetpos id="help_page_sidenav" position="sidenav" />
 
 {$innerContent|raw}]]></template>
+    <template title="prism_macros" type="public" addon_id="XF" version_id="2011072" version_string="2.1.10 Patch 2"><![CDATA[<xf:macro name="setup">
+	<xf:css src="bb_code.less" />
+	<xf:js prod="xf/code_block-compiled.js" dev="vendor/prism/prism.min.js, xf/code_block.js" />
+	<xf:js src="prism_additional/prism-docker.min.js" />
+	<xf:js src="prism_additional/prism-go.min.js" />
+</xf:macro>]]></template>
   </templates>
   <properties>
     <property property_name="blockBorder" group_name="block" title="Block border framework" description="Virtually all blocks have their borders styled with these settings" property_type="css" value_type="" depends_on="" value_group="" display_order="20000" css_components="border,extra" addon_id="XF">
